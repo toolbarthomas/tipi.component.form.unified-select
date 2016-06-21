@@ -1,0 +1,113 @@
+@mixin core_unified-select {
+	.select {
+		display: block;
+
+		select {
+			margin: 0;
+		}
+
+		&.__select--ready {
+			position: relative;
+			height: $unified-select-height;
+			margin-bottom: $unified-select-margin-bottom;
+			cursor: pointer;
+
+			@if $unified-select-transitions != false {
+				@include transition(
+					(background $transition-fast ease-out 0s),
+					(color $transition-fast ease-out 0s),
+					(border $transition-fast ease-out 0s),
+					(box-shadow $transition-fast ease-out 0s)
+				);
+			}
+
+
+			@include user-select(none);
+
+			&:only-child,
+			&:last-child {
+				margin-bottom: 0;
+			}
+
+			select {
+				display: block;
+				position: absolute;
+				top: 50%;
+				left: 0;
+				width: 100%;
+				height: $unified-select-height;
+				@include appearance(none);
+				border: 0;
+				outline: none;
+				opacity: 0;
+				@include transform(
+					translateY(-50%)
+				);
+
+				option {
+					opacity: 1;
+				}
+			}
+		}
+
+		&.__select--disabled {
+			* {
+				cursor: default;
+				cursor: not-allowed;
+			}
+		}
+	}
+
+	.select-value {
+		display: none;
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 50%;
+		padding: 0 $unified-select-gutter;
+		padding-right: $unified-select-height;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		pointer-events: none;
+		@include transform(
+			translateY(-50%)
+		);
+
+		.__select--ready & {
+			display: block;
+		}
+	}
+
+	.select-control {
+		display: none;
+		position: absolute;
+		top: 50%;
+		right: $unified-select-height / 2;
+		pointer-events: none;
+
+		@include transform(
+			translate(50%, -50%)
+		);
+
+		.__select--ready & {
+			display: block;
+		}
+	}
+
+	.select-control-glyph {
+		display: block;
+		margin: 0;
+		padding: 0;
+		vertical-align: middle;
+		width: $unified-select-glyph-width;
+		height: $unified-select-glyph-height;
+
+		@if $unified-select-transitions != false {
+			@include transition(
+				(fill $transition-fast ease-out 0s),
+				(color $transition-fast ease-out 0s)
+			);
+		}
+	}
+}

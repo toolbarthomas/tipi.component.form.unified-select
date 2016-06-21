@@ -1,0 +1,78 @@
+@mixin unified-select-style(
+	$selector: null,
+	$background-color: false,
+	$background-color--focus: false,
+	$color: false,
+	$color--focus: false,
+	$border: false,
+	$border-color--focus: false,
+	$border-radius: false,
+	$box-shadow: false,
+	$box-shadow--focus: false,
+	$glyph-color: false,
+	$glyph-color--focus: false
+) {
+	@if $selector != false {
+		.select {
+			&#{$selector} {
+				&.__select--ready {
+					@if $background-color != false {
+						background-color: $background-color;
+					}
+
+					@if $border != false {
+						border: $border;
+					}
+
+					@if $border-radius != false {
+						border-radius: $border-radius;
+					}
+
+					@if $box-shadow != false {
+						box-shadow: $box-shadow;
+					}
+
+					.select-value {
+						@if $color != false {
+							color: $color;
+						}
+					}
+
+					.select-control-glyph {
+						@if $glyph-color != false {
+							color: $glyph-color;
+							fill: $glyph-color;
+						}
+					}
+				}
+
+				&.__select--focus {
+					@if $background-color--focus != false {
+						background-color: $background-color--focus;
+					}
+
+					@if $border-color--focus != false {
+						border: $border-color--focus;
+					}
+
+					@if $box-shadow--focus != false {
+						box-shadow: $box-shadow--focus;
+					}
+
+					.select-value {
+						@if $color--focus != false {
+							color: $color--focus;
+						}
+					}
+
+					.select-control-glyph {
+						@if $glyph-color--focus != false {
+							color: $glyph-color--focus;
+							fill: $glyph-color--focus;
+						}
+					}
+				}
+			}
+		}
+	}
+}

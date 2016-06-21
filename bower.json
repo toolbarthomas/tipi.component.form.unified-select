@@ -1,0 +1,17 @@
+{
+  "name": "tipi.component.form.unified-select",
+  "homepage": "https://github.com/toolbarthomas/tipi.component.form.unified-select",
+  "authors": [
+    "Thomas van der Velde <contact@toolbarthomas.net>"
+  ],
+  "description": "Javascript component for styling select buttons",
+  "keywords": [
+    "toolbarthomas",
+    "modular",
+    "tipi",
+    "form",
+    "select"
+  ],
+  "license": "MIT",
+  "main": "_tipi.component.form.unified-select.scss"
+}
