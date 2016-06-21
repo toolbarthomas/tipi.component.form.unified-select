@@ -112,7 +112,7 @@ function setUnifiedSelectValue(unifiedSelect, unifiedSelectElements, unifiedSele
 			unifiedSelectValue.html(unifiedSelectOption.eq(unifiedSelect.data(unifiedSelectDataAttributes.defaultIndex)).html());
 		}
 	} else {
-		unifiedSelectSelect.trigger('change');
+		unifiedSelect.trigger('tipi.ui.unified.select.change', [unifiedSelectSelect]);
 	}
 }
 

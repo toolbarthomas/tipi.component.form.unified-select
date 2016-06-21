@@ -52,7 +52,7 @@
 					}
 
 					@if $border-color--focus != false {
-						border: $border-color--focus;
+						border-color: $border-color--focus;
 					}
 
 					@if $box-shadow--focus != false {
