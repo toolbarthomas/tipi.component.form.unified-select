@@ -1,9 +1,30 @@
-$unified-select-gutter: 12px !default;
-$unified-select-margin-bottom: 15px !default;
-$unified-select-height: 32px !default;
+$unified-select-gutter: 									12px !default;
+$unified-select-margin-bottom: 								15px !default;
+$unified-select-height: 									32px !default;
 
-$unified-select-glyph-width: 8px !default;
-$unified-select-glyph-height: 8px !default;
-$unified-select-glyph-border-radius: 50% !default;
+$unified-select-glyph-width: 								8px !default;
+$unified-select-glyph-height: 								8px !default;
+$unified-select-glyph-border-radius: 						50% !default;
 
-$unified-select-transitions: true !default;
+$unified-select-transitions: 								true !default;
+$unified-select-transition-speed:							200ms !default;
+$unified-select-transition-timing:							ease-in-out;
+
+$unified-select-validation-enabled-for-border-color: 		true !default;
+$unified-select-validation-enabled-for-background-color: 	true !default;
+
+@if $unified-select-validation-enabled-for-border-color == true {
+	@if variable-exists(form-validation-border-color-selectors) == false {
+		$form-validation-border-color-selectors: () !global;
+	}
+
+	$form-validation-border-color-selectors: append($form-validation-border-color-selectors, ('.select.__select--ready'), comma);
+}
+
+@if $unified-checkbox-validation-enabled-for-background-color == true {
+	@if variable-exists(form-validation-background-color-selectors) == false {
+		$form-validation-background-color-selectors: () !global;
+	}
+
+	$form-validation-background-color-selectors: append($form-validation-border-color-selectors, ('.select'), comma);
+}

@@ -14,10 +14,10 @@
 
 			@if $unified-select-transitions != false {
 				@include transition(
-					(background $transition-fast ease-out 0s),
-					(color $transition-fast ease-out 0s),
-					(border $transition-fast ease-out 0s),
-					(box-shadow $transition-fast ease-out 0s)
+					(background $unified-select-transition-speed $unified-select-transition-timing 0s),
+					(color $unified-select-transition-speed $unified-select-transition-timing 0s),
+					(border $unified-select-transition-speed $unified-select-transition-timing 0s),
+					(box-shadow $unified-select-transition-speed $unified-select-transition-timing 0s)
 				);
 			}
 
@@ -105,8 +105,8 @@
 
 		@if $unified-select-transitions != false {
 			@include transition(
-				(fill $transition-fast ease-out 0s),
-				(color $transition-fast ease-out 0s)
+				(fill $unified-select-transition-speed $unified-select-transition-timing 0s),
+				(color $unified-select-transition-speed $unified-select-transition-timing 0s)
 			);
 		}
 	}
