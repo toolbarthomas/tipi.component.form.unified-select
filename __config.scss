@@ -21,7 +21,7 @@ $unified-select-validation-enabled-for-background-color: 	true !default;
 	$form-validation-border-color-selectors: append($form-validation-border-color-selectors, ('.select.__select--ready'), comma);
 }
 
-@if $unified-checkbox-validation-enabled-for-background-color == true {
+@if $unified-select-validation-enabled-for-background-color == true {
 	@if variable-exists(form-validation-background-color-selectors) == false {
 		$form-validation-background-color-selectors: () !global;
 	}
