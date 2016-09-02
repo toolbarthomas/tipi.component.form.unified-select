@@ -95,8 +95,8 @@
 		}
 	}
 
-	.select-control-glyph {
-		display: block;
+	#{$unified-select-glyph-selector} {
+		display: inline-block;
 		margin: 0;
 		padding: 0;
 		vertical-align: middle;
