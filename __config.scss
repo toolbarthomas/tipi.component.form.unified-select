@@ -12,21 +12,18 @@ $unified-select-transitions: 								true !default;
 $unified-select-transition-speed:							200ms !default;
 $unified-select-transition-timing:							ease-in-out !default;
 
-$unified-select-validation-enabled-for-border-color: 		true !default;
-$unified-select-validation-enabled-for-background-color: 	true !default;
+$unified-select-border-selectors:							('.select.__select--ready') !default;
+$unified-select-background-selectors:						('.select.__select--ready') !default;
+$unified-select-font-selectors:								('.select.__select--ready .select-value') !default;
 
-@if $unified-select-validation-enabled-for-border-color == true {
-	@if variable-exists(form-validation-border-color-selectors) == false {
-		$form-validation-border-color-selectors: () !global;
-	}
-
-	$form-validation-border-color-selectors: append($form-validation-border-color-selectors, ('.select.__select--ready'), comma);
+@if variable-exists(form-validation-border-selectors) {
+	$form-validation-border-selectors: append($form-validation-border-selectors, $unified-select-border-selectors, 'comma');
 }
 
-@if $unified-select-validation-enabled-for-background-color == true {
-	@if variable-exists(form-validation-background-color-selectors) == false {
-		$form-validation-background-color-selectors: () !global;
-	}
+@if variable-exists(form-validation-background-selectors) {
+	$form-validation-background-selectors: append($form-validation-background-selectors, $unified-select-background-selectors, 'comma');
+}
 
-	$form-validation-background-color-selectors: append($form-validation-border-color-selectors, ('.select'), comma);
+@if variable-exists(form-validation-font-selectors) {
+	$form-validation-font-selectors: append($form-validation-font-selectors, $unified-select-font-selectors, 'comma');
 }

@@ -56,7 +56,7 @@
 						}
 
 						@if $border-color--hover != false {
-							border: $border-color--hover;
+							border-color: $border-color--hover;
 						}
 
 						@if $box-shadow--hover != false {

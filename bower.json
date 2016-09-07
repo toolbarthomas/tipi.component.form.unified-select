@@ -13,5 +13,8 @@
     "select"
   ],
   "license": "MIT",
-  "main": "_tipi.component.form.unified-select.scss"
+  "main": "_tipi.component.form.unified-select.scss",
+  "dependencies": {
+    "tipi.tool.form.validation": "^1.0.0",
+  }
 }
