@@ -1,157 +1,197 @@
-function setUnifiedSelect() {
-	var unifiedSelectElements = {
-		root 		: 'select',
-		value		: 'select-value',
-		select		: 'select',
-		option		: 'option',
-		form 		: 'form'
-	};
+function setUnifiedSelect()
+{
+	var data = {
+		elements : {
+			root 		: 'select',
+			value		: 'select-value',
+			select		: 'select',
+			option		: 'option',
+			form 		: 'form'
+		},
+		states: {
+			ready 		: '__select--ready',
+			focus 		: '__select--focus',
+			checked 	: '__select--checked',
+			disabled 	: '__select--disabled',
+			placeholder : '__select--placeholder'
+		},
+		attributes: {
+			disabled: 'disabled',
+			selected : 'select-selected',
+			placeholder  : 'select-placeholder'
+		}
+	}
 
-	var unifiedSelectStates = {
-		ready 		: '__select--ready',
-		focus 		: '__select--focus',
-		checked 	: '__select--checked',
-		disabled 	: '__select--disabled',
-		placeholder : '__select--placeholder'
-	};
+	var unified_select = $('.' + data.elements.root).not('.' + data.states.ready);
+	if(unified_select.length == 0)
+	{
+		return;
+	}
 
+	unified_select.on({
+		'tipi.unified-select.reset' : function(event, unified_select) {
+			setUnifiedSelectDefaultSelectedOption(unified_select, data);
+			setUnifiedSelectDisabledState(unified_select, data);
+			setUnifiedSelectPlaceholder(unified_select, data);
+		},
+		'tipi.unified-select.change' : function(event, unified_select) {
+			changeUnifiedSelectValue(unified_select, data);
+		}
+	});
 
-	var unifiedSelectDataAttributes = {
-		defaultIndex : 'select-selected-index',
-		placeholder  : 'select-placeholder'
-	};
+	unified_select.each(function() {
+		var unified_select = $(this);
+		var unified_select_value = getUnifiedSelectElement(unified_select, 'select-value', data);
+		var select = getUnifiedSelectElement(unified_select, 'select', data);
+		var option = getUnifiedSelectElement(select, 'option', data);
+		var form = getUnifiedSelectElement(unified_select, 'form', data);
 
-	var unifiedSelect = $('.' + unifiedSelectElements.root).not('.' + unifiedSelectStates.ready);
-	if(unifiedSelect.length > 0 ) {
-		unifiedSelect.each(function() {
-			var unifiedSelectEach = $(this);
-			var unifiedSelectValue = getUnifiedSelectElement(unifiedSelectEach, 'value', unifiedSelectElements);
-			var unifiedSelectSelect = getUnifiedSelectElement(unifiedSelectEach, 'select', unifiedSelectElements);
-			var unifiedSelectOption = getUnifiedSelectElement(unifiedSelectEach, 'option', unifiedSelectElements);
-			var unifiedSelectForm = getUnifiedSelectElement(unifiedSelectEach, 'form', unifiedSelectElements);
+		if(unified_select_value.length == 0) {
+			return;
+		}
 
-			if(unifiedSelectValue.length > 0 && unifiedSelectSelect.length > 0 && unifiedSelectOption.length > 0) {
-				//Set the disabled state on the .select container.
-				if(unifiedSelectSelect.prop('disabled') === true) {
-					unifiedSelectEach.addClass(unifiedSelectStates.disabled);
-				} else {
-					unifiedSelectEach.removeClass(unifiedSelectStates.disabled);
-				}
+		if(select.length == 0) {
+			return;
+		}
 
-				//Store the default selected option so we can reset it to the correct value
-				var unifiedSelectOption_selected = unifiedSelectOption.filter(':selected').first();
-				if(unifiedSelectOption_selected.length === 0 ) {
-					unifiedSelectOption_selected = unifiedSelectOption.first();
-				}
+		if(option.length == 0) {
+			return;
+		}
 
-				unifiedSelectEach.data(unifiedSelectDataAttributes.defaultIndex, unifiedSelectOption_selected.index());
-
-				if(typeof unifiedSelectForm != 'undefined') {
-					unifiedSelectForm.on({
-						reset : function() {
-
-							var resetValue = unifiedSelectEach.data(unifiedSelectDataAttributes.defaultIndex);
-							if(typeof resetValue === 'undefined') {
-								resetValue = 0;
-							}
-
-							unifiedSelectOption.prop('selected', false).eq(resetValue).prop('selected', true);
-							// unifiedSelectSelect.trigger('change');
-
-							setUnifiedSelectValue(unifiedSelectEach, unifiedSelectElements, unifiedSelectStates, unifiedSelectDataAttributes);
-						}
-					});
-				}
-
-				unifiedSelectSelect.on({
-					focus : function() {
-						var unifiedSelect = getUnifiedSelectElement($(this), 'root', unifiedSelectElements);
-						unifiedSelect.addClass(unifiedSelectStates.focus);
-					},
-					blur : function() {
-						var unifiedSelect = getUnifiedSelectElement($(this), 'root', unifiedSelectElements);
-						unifiedSelect.removeClass(unifiedSelectStates.focus);
-					},
-					keyup: function() {
-						$(this).blur().focus();
-					},
-					change: function() {
-						var unifiedSelect = getUnifiedSelectElement($(this), 'root', unifiedSelectElements);
-						unifiedSelect.trigger('tipi.ui.unified.select.change', [$(this)]);
-					}
-				});
-
-				unifiedSelectEach.on({
-					'tipi.ui.unified.select.change' : function(event, select) {
-						changeUnifiedSelect(select, unifiedSelectElements, unifiedSelectStates);
-					}
-				});
-
-				//Trigger the checkbox on the first run!
-				unifiedSelectEach.addClass(unifiedSelectStates.ready);
-				setUnifiedSelectValue(unifiedSelectEach, unifiedSelectElements, unifiedSelectStates, unifiedSelectDataAttributes);
+		form.on({
+			reset : function() {
+				unified_select.trigger('tipi.unified-select.reset', [unified_select]);
 			}
 		});
+
+		select.on({
+			focus : function() {
+				var unified_select = getUnifiedSelectElement($(this), 'root', data);
+				unified_select.addClass(data.states.focus);
+			},
+			blur : function() {
+				var unified_select = getUnifiedSelectElement($(this), 'root', data);
+				unified_select.removeClass(data.states.focus);
+			},
+			keyup: function() {
+				$(this).blur().focus();
+			},
+			change: function() {
+				var unified_select = getUnifiedSelectElement($(this), 'root', data);
+				unified_select.trigger('tipi.unified-select.change', [unified_select]);
+			}
+		});
+
+		unified_select.trigger('tipi.unified-select.reset', [unified_select]);
+
+		unified_select.addClass(data.states.ready);
+	});
+}
+
+//Set the selected option for the select
+function setUnifiedSelectDefaultSelectedOption(unified_select, data)
+{
+	var selected_option = unified_select.data(data.attributes.selected);
+	var option = getUnifiedSelectElement(unified_select, 'option', data);
+
+	if(typeof selected_option == 'undefined')
+	{
+		selected_option = option.not(':disabled').index();
+	}
+
+	option.prop('selected', false).eq(selected_option).prop('selected', true);
+}
+
+//Toggle the Disabled classname on the container element
+function setUnifiedSelectDisabledState(unified_select, data)
+{
+	var select = getUnifiedSelectElement(unified_select, 'select', data);
+	if(typeof select == 'undefined')
+	{
+		return;
+	}
+
+	if(select.prop(data.attributes.disabled))
+	{
+		unified_select.addClass(data.states.disabled);
+	}
+	else
+	{
+		unified_select.removeClass(data.states.disabled);
 	}
 }
 
-function setUnifiedSelectValue(unifiedSelect, unifiedSelectElements, unifiedSelectStates, unifiedSelectDataAttributes) {
-	var unifiedSelectOption = getUnifiedSelectElement(unifiedSelect, 'option', unifiedSelectElements);
-	var unifiedSelectValue = getUnifiedSelectElement(unifiedSelect, 'value', unifiedSelectElements);
-	var unifiedSelectSelect = getUnifiedSelectElement(unifiedSelect, 'select', unifiedSelectElements);
+//Set the placeholder to the select
+function setUnifiedSelectPlaceholder(unified_select, data)
+{
+	var placeholder = unified_select.data(data.attributes.placeholder);
 
-	//Check if the first selected option is disabled so we can ad the placeholder class
-	if(unifiedSelectOption.eq(unifiedSelect.data(unifiedSelectDataAttributes.defaultIndex)).prop('disabled') === true) {
-		//Set the placeholder class on the .select container
-		unifiedSelect.addClass(unifiedSelectStates.placeholder);
+	var unified_select_value = getUnifiedSelectElement(unified_select, 'select-value', data);
+	var select = getUnifiedSelectElement(unified_select, 'select', data);
+	var option = getUnifiedSelectElement(select, 'option', data);
 
-		//Try to get the placeholder value from the .select container
-		if(typeof unifiedSelect.data(unifiedSelectDataAttributes.placeholder) !== 'undefined') {
-			unifiedSelectValue.html(unifiedSelect.data(unifiedSelectDataAttributes.placeholder));
-		} else {
-			unifiedSelectValue.html(unifiedSelectOption.eq(unifiedSelect.data(unifiedSelectDataAttributes.defaultIndex)).html());
-		}
-	} else {
-		unifiedSelect.trigger('tipi.ui.unified.select.change', [unifiedSelectSelect]);
+	//Use the value of the first option as placeholder fallback
+	if(typeof placeholder == 'undefined') {
+		placeholder = option.filter(':selected').first().text();
 	}
+
+	unified_select_value.html(placeholder);
 }
 
-function changeUnifiedSelect(unifiedSelectSelect, unifiedSelectElements, unifiedSelectStates) {
-	var unifiedSelect = getUnifiedSelectElement(unifiedSelectSelect, 'root', unifiedSelectElements);
-	var unifiedSelectValue = getUnifiedSelectElement(unifiedSelect, 'value', unifiedSelectElements);
-	var unifiedSelectOption = getUnifiedSelectElement(unifiedSelect, 'option', unifiedSelectElements);
+//Change innerHtml of the the value container
+function changeUnifiedSelectValue(unified_select, data)
+{
+	var unified_select_value = getUnifiedSelectElement(unified_select, 'select-value', data);
+	var select = getUnifiedSelectElement(unified_select, 'select', data);
+	var option = getUnifiedSelectElement(select, 'option', data);
+	var selected = option.filter(':selected').first();
 
-	var selectedOption = unifiedSelectOption.filter(':selected').first();
-	if(selectedOption.length > 0) {
-		unifiedSelectValue.html(selectedOption.html());
-		unifiedSelect.removeClass(unifiedSelectStates.placeholder);
+	if(selected.length == 0)
+	{
+		return;
 	}
+
+	unified_select_value.html(selected.text());
 }
 
-function getUnifiedSelectElement(origin, unifiedSelectType, unifiedSelectElements) {
-	if(typeof origin != 'undefined' && typeof unifiedSelectType != 'undefined') {
-		var element;
-
-		switch(unifiedSelectType) {
-			case 'root':
-				element = origin.parents('.' + unifiedSelectElements.root).first();
-			break;
-			case 'value':
-				element = origin.find('.' + unifiedSelectElements.value).first();
-			break;
-			case 'select':
-				element = origin.find(unifiedSelectElements.select).first();
-			break;
-			case 'option':
-				element = origin.find(unifiedSelectElements.option);
-			break;
-			case 'form':
-				element = origin.parents(unifiedSelectElements.form).first();
-			break;
-			default:
-				element = undefined;
-		}
-
-		return element;
+function getUnifiedSelectElement(origin, type, data)
+{
+	if(typeof origin == 'undefined')
+	{
+		return;
 	}
+
+	if(origin.length == 0)
+	{
+		return;
+	}
+
+	if(typeof data.elements == 'undefined')
+	{
+		return;
+	}
+
+	var element;
+
+	switch(type) {
+		case 'root':
+			element = origin.parents('.' + data.elements.root).first();
+		break;
+		case 'select-value':
+			element = origin.find('.' + data.elements.value).first();
+		break;
+		case 'select':
+			element = origin.find(data.elements.select).first();
+		break;
+		case 'option':
+			element = origin.find(data.elements.option);
+		break;
+		case 'form':
+			element = origin.parents(data.elements.form).first();
+		break;
+		default:
+			element = null;
+	}
+
+	return element;
 }
