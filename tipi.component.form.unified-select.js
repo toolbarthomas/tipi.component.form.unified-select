@@ -91,15 +91,15 @@ function setUnifiedSelect()
 //Set the selected option for the select
 function setUnifiedSelectDefaultSelectedOption(unified_select, data)
 {
-	var selected_option = unified_select.data(data.attributes.selected);
 	var option = getUnifiedSelectElement(unified_select, 'option', data);
+	var selected_index = option.filter(':selected').first().index();
 
-	if(typeof selected_option == 'undefined')
+	if(selected_index < 0)
 	{
-		selected_option = option.not(':disabled').index();
+		selected_index = option.not(':disabled').first().index();
 	}
 
-	option.prop('selected', false).eq(selected_option).prop('selected', true);
+	option.prop('selected', false).eq(selected_index).prop('selected', true);
 }
 
 //Toggle the Disabled classname on the container element
