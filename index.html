@@ -5,48 +5,75 @@
 
 <section id="form" class="fluid">
 	<div class="wrapper">
-		<h1>Forms</h1>
+		<form action="">
+			<h1>Forms</h1>
 
-		<div class="form-group">
-			<div class="select">
-				<div class="select-value"></div>
-				<div class="select-control">
-					<div class="select-control-glyph"></div>
+			<h2>Regular</h2>
+			<div class="form-group">
+				<div class="select">
+					<div class="select-value"></div>
+					<div class="select-control"></div>
+					<select name="" id="">
+						<option>Red</option>
+						<option>White</option>
+						<option>Blue</option>
+					</select>
 				</div>
-				<select name="" id="">
-					<option>Option 1</option>
-					<option>Option 2</option>
-					<option>Option 3</option>
-				</select>
 			</div>
-		</div>
 
-		<div class="form-group form-group--error">
-			<div class="select">
-				<div class="select-value"></div>
-				<div class="select-control">
-					<div class="select-control-glyph"></div>
+			<div class="form-group">
+				<div class="select">
+					<div class="select-value"></div>
+					<div class="select-control"></div>
+					<select name="" id="">
+						<option>Red</option>
+						<option selected>White</option>
+						<option>Blue</option>
+					</select>
 				</div>
-				<select name="" id="">
-					<option>Option 1</option>
-					<option>Option 2</option>
-					<option>Option 3</option>
-				</select>
 			</div>
-		</div>
 
-		<div class="form-group form-group--warning">
-			<div class="select">
-				<div class="select-value"></div>
-				<div class="select-control">
-					<div class="select-glyph"></div>
+			<h2>First disabled</h2>
+			<div class="form-group">
+				<div class="select" data-select-placeholder="Disabled state for everyone">
+					<div class="select-value"></div>
+					<div class="select-control"></div>
+					<select name="" id="">
+						<option disabled>Disabled state for everyone</option>
+						<option>Red 2</option>
+						<option>White</option>
+						<option>Blue</option>
+					</select>
 				</div>
-				<select name="" id="">
-					<option>Option 1</option>
-					<option>Option 2</option>
-					<option>Option 3</option>
-				</select>
 			</div>
-		</div>
+
+			<h2>Custom placeholder</h2>
+			<div class="form-group">
+				<div class="select" data-select-placeholder="Custom placeholder goes here">
+					<div class="select-value"></div>
+					<div class="select-control"></div>
+					<select name="" id="">
+						<option>Red</option>
+						<option>White</option>
+						<option>Blue</option>
+					</select>
+				</div>
+			</div>
+
+			<h2>Disabled</h2>
+			<div class="form-group">
+				<div class="select">
+					<div class="select-value"></div>
+					<div class="select-control"></div>
+					<select name="" id="" disabled>
+						<option>Red</option>
+						<option>White</option>
+						<option>Blue</option>
+					</select>
+				</div>
+			</div>
+
+			<input type="reset">
+		</form>
 	</div>
 </section>

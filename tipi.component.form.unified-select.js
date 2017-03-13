@@ -135,6 +135,8 @@ function setUnifiedSelectPlaceholder(unified_select, data)
 		placeholder = option.filter(':selected').first().text();
 	}
 
+	unified_select.addClass(data.states.placeholder);
+
 	unified_select_value.html(placeholder);
 }
 
@@ -150,6 +152,8 @@ function changeUnifiedSelectValue(unified_select, data)
 	{
 		return;
 	}
+
+	unified_select.removeClass(data.states.placeholder);
 
 	unified_select_value.html(selected.text());
 }
