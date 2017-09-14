@@ -1,0 +1,27 @@
+{% extends "layouts/base.twig" %}
+
+{% block content %}
+
+	<div class="select">
+		<div class="select-value"></div>
+		<div class="select-control"></div>
+		<select name="" id="">
+			<option disabled>Disabled state for everyone</option>
+			<option>Red 2</option>
+			<option>White</option>
+			<option>Blue</option>
+		</select>
+	</div>
+
+	<div class="select">
+		<div class="select-value"></div>
+		<div class="select-control"></div>
+		<select name="" id="" disabled>
+			<option disabled>Disabled state for everyone</option>
+			<option>Red 2</option>
+			<option selected>White</option>
+			<option>Blue</option>
+		</select>
+	</div>
+
+{% endblock %}

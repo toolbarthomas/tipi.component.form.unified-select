@@ -1,201 +1,284 @@
-function setUnifiedSelect()
-{
-	var data = {
-		elements : {
-			root 		: 'select',
-			value		: 'select-value',
-			select		: 'select',
-			option		: 'option',
-			form 		: 'form'
-		},
-		states: {
-			ready 		: '__select--ready',
-			focus 		: '__select--focus',
-			checked 	: '__select--checked',
-			disabled 	: '__select--disabled',
-			placeholder : '__select--placeholder'
-		},
-		attributes: {
-			disabled: 'disabled',
-			selected : 'select-selected',
-			placeholder  : 'select-placeholder'
-		}
-	}
+(function (win, doc, $){
 
-	var unified_select = $('.' + data.elements.root).not('.' + data.states.ready);
-	if(unified_select.length == 0)
-	{
-		return;
-	}
+	$(window).on({
+		// All function needed on the first init
+		'tipi.unified-select.init' : function(event, unified_select) {
+			setUnifiedSelectReadyState(unified_select)
+			setUnifiedSelectDisabledState(unified_select);
+			setUnifiedSelectEvents(unified_select);
+			setUnifiedSelectValue(unified_select);
 
-	unified_select.on({
-		'tipi.unified-select.reset' : function(event, unified_select) {
-			setUnifiedSelectDefaultSelectedOption(unified_select, data);
-			setUnifiedSelectDisabledState(unified_select, data);
-			setUnifiedSelectPlaceholder(unified_select, data);
+			unsetUnifiedSelectDropdown(unified_select);
+			setUnifiedSelectDropdown(unified_select);
+			setUnifiedSelectDropdownItemEvents(unified_select);
+
+			setUnifiedSelectDropdownEvents(unified_select);
 		},
-		'tipi.unified-select.change' : function(event, unified_select) {
-			changeUnifiedSelectValue(unified_select, data);
+		'tipi.unified-select.open': function (event, unified_select) {
+			openUnifiedSelectDropdown(unified_select);
+		},
+		'tipi.unified-select.close': function (event, unified_select) {
+			closeUnifiedSelectDropdown(unified_select);
+		},
+		// All function needed when we changed the value of the select
+		'tipi.unified-select.change': function (event, unified_select, index) {
+			setUnifiedSelectSelectedIndex(unified_select, index);
+		},
+		// Function to init when we wan't to update our select
+		'tipi.unified-select.setValue' : function(event, unified_select) {
+			setUnifiedSelectValue(unified_select);
 		}
 	});
+	
+	window.setUnifiedSelect = function() {
+		var unified_selects = $('.select').not('js__select--ready');
 
-	unified_select.each(function() {
-		var unified_select = $(this);
-		var unified_select_value = getUnifiedSelectElement(unified_select, 'select-value', data);
-		var select = getUnifiedSelectElement(unified_select, 'select', data);
-		var option = getUnifiedSelectElement(select, 'option', data);
-		var form = getUnifiedSelectElement(unified_select, 'form', data);
-
-		if(unified_select_value.length == 0) {
+		if (unified_selects.length === 0) {
 			return;
 		}
 
-		if(select.length == 0) {
-			return;
-		}
+		unified_selects.each(function() {
+			var unified_select = $(this);
+			var select = unified_select.find('select');
 
-		if(option.length == 0) {
-			return;
-		}
-
-		form.on({
-			reset : function() {
-				unified_select.trigger('tipi.unified-select.reset', [unified_select]);
+			if(select.length === 0) {
+				return;
 			}
-		});
 
+			$(window).trigger('tipi.unified-select.init', [unified_select]);
+		});
+	}
+
+	function setUnifiedSelectReadyState(unified_select) {
+		unified_select.addClass('js__select--ready');		
+	}
+
+	function setUnifiedSelectDisabledState(unified_select) {
+		var disabled = getUnifiedSelectDisabledState(unified_select);
+
+		if (disabled) {
+			unified_select.addClass('js__select--disabled');
+		}
+		else {
+			unified_select.removeClass('js__select--disabled');
+		}
+	}
+
+	function getUnifiedSelectDisabledState(unified_select) {
+		var select = unified_select.find('select');
+
+		// Try to define the disabled from the disabled attribute
+		var disabled = select.attr('disabled');
+
+		// Check if the disabled state has been set as DOM property
+		if (typeof disabled === 'undefined') {
+			disabled = select.prop('disabled');
+		} else {
+			disabled = true;
+		}
+
+		return disabled;
+	}
+
+	function setUnifiedSelectEvents(unified_select) {
+		var select = unified_select.find('select');
 		select.on({
-			focus : function() {
-				var unified_select = getUnifiedSelectElement($(this), 'root', data);
-				unified_select.addClass(data.states.focus);
+			focus: function () {
+				unified_select.addClass('js__select--focus');
 			},
-			blur : function() {
-				var unified_select = getUnifiedSelectElement($(this), 'root', data);
-				unified_select.removeClass(data.states.focus);
+			blur: function () {
+				unified_select.removeClass('js__select--focus');
 			},
-			keyup: function() {
-				$(this).blur().focus();
+			keyup: function () {
+				select.blur().focus();
 			},
-			change: function() {
-				var unified_select = getUnifiedSelectElement($(this), 'root', data);
-				unified_select.trigger('tipi.unified-select.change', [unified_select]);
+			change: function () {
+				$(document).trigger('tipi.unified-select.setValue', [unified_select]);
+				console.log('update');
 			}
 		});
-
-		unified_select.trigger('tipi.unified-select.reset', [unified_select]);
-
-		unified_select.addClass(data.states.ready);
-	});
-}
-
-//Set the selected option for the select
-function setUnifiedSelectDefaultSelectedOption(unified_select, data)
-{
-	var option = getUnifiedSelectElement(unified_select, 'option', data);
-	var selected_index = option.filter(':selected').first().index();
-
-	if(selected_index < 0)
-	{
-		selected_index = option.not(':disabled').first().index();
 	}
 
-	option.prop('selected', false).eq(selected_index).prop('selected', true);
-}
+	// Append the dropdown and items for our select
+	function setUnifiedSelectValue(unified_select) {
+		var unified_select_value = unified_select.find('.select-value');
 
-//Toggle the Disabled classname on the container element
-function setUnifiedSelectDisabledState(unified_select, data)
-{
-	var select = getUnifiedSelectElement(unified_select, 'select', data);
-	if(typeof select == 'undefined')
-	{
-		return;
+		var select = unified_select.find('select');
+
+		var selected_index = select.get(0).selectedIndex;
+		var option = select.find('option').eq(selected_index);
+
+		console.log(selected_index);
+
+		if (option.length === 0) {
+			return;
+		}
+
+		var label = getUnifiedSelectOptionLabelAttribute(option);
+		
+		// Set the actual selected value!
+		unified_select_value.html(label);
+	}
+	
+
+	// Remove the dropdown and items for our select
+	function unsetUnifiedSelectDropdown(unified_select) {
+		var unified_select_dropdown = unified_select.find('.select-dropdown');
+
+		// Cancel unset if we don't have a dropdown defined.
+		if (unified_select_dropdown.length === 0) {
+			return;
+		}
+
+		// Remove the unified_select_dropdown
+		unified_select_dropdown.remove();
 	}
 
-	if(select.prop(data.attributes.disabled))
-	{
-		unified_select.addClass(data.states.disabled);
-	}
-	else
-	{
-		unified_select.removeClass(data.states.disabled);
-	}
-}
+	// Append the dropdown and items for our select
+	function setUnifiedSelectDropdown(unified_select) {
+		var unified_select_dropdown = unified_select.find('.select-dropdown');
+		var unified_select_dropdown_items = unified_select_dropdown.find('.select-dropdown-items');
+		var unified_select_dropdown_item = unified_select_dropdown_items.find('.select-dropdown-item');
 
-//Set the placeholder to the select
-function setUnifiedSelectPlaceholder(unified_select, data)
-{
-	var placeholder = unified_select.data(data.attributes.placeholder);
+		// Cancel set if we have a dropdown defined
+		if (unified_select_dropdown_item.length > 0) {
+			return;
+		}
 
-	var unified_select_value = getUnifiedSelectElement(unified_select, 'select-value', data);
-	var select = getUnifiedSelectElement(unified_select, 'select', data);
-	var option = getUnifiedSelectElement(select, 'option', data);
+		var select = unified_select.find('select');
+		var options = select.find('option');
 
-	//Use the value of the first option as placeholder fallback
-	if(typeof placeholder == 'undefined') {
-		placeholder = option.filter(':selected').first().text();
-	}
+		// Cancel set if we have no options defined.
+		if(options.length === 0) {
+			return;
+		}
 
-	unified_select.addClass(data.states.placeholder);
+		// Append the dropdown
+		unified_select.append('<div class="select-dropdown"></div>');
+		unified_select_dropdown = unified_select.find('.select-dropdown');
 
-	unified_select_value.html(placeholder);
-}
+		// Append the dropdown items
+		unified_select_dropdown.append('<div class="select-dropdown-items"></div>');
+		unified_select_dropdown_items = unified_select_dropdown.find('.select-dropdown-items');
 
-//Change innerHtml of the the value container
-function changeUnifiedSelectValue(unified_select, data)
-{
-	var unified_select_value = getUnifiedSelectElement(unified_select, 'select-value', data);
-	var select = getUnifiedSelectElement(unified_select, 'select', data);
-	var option = getUnifiedSelectElement(select, 'option', data);
-	var selected = option.filter(':selected').first();
+		// Loop through each select option and set it's attribute
+		options.each(function(index) {
+			var option = $(this);
+			
+			var label = getUnifiedSelectOptionLabelAttribute(option);
+			var disabled = getUnifiedSelectOptionDisabledAttribute(option);
+			if(disabled) {
+				disabled = ' js__select-dropdown-item--disabled';
+			} else {
+				disabled = '';
+			}
 
-	if(selected.length == 0)
-	{
-		return;
-	}
-
-	unified_select.removeClass(data.states.placeholder);
-
-	unified_select_value.html(selected.text());
-}
-
-function getUnifiedSelectElement(origin, type, data)
-{
-	if(typeof origin == 'undefined')
-	{
-		return;
+			unified_select_dropdown_items.append('<div class="select-dropdown-item' + disabled + '">' + label + '</div>');			
+		});
 	}
 
-	if(origin.length == 0)
-	{
-		return;
+	// Define the label for our dropdown item
+	function getUnifiedSelectOptionLabelAttribute(option) {
+		// Try to define the label from the label attribute
+		var label = option.attr('label');
+		
+		// Fallback to the actual option text
+		if (typeof label === 'undefined') {
+			label = option.text();
+		}
+
+		return label;
 	}
 
-	if(typeof data.elements == 'undefined')
-	{
-		return;
+	// Define the disabled state for our dropdown item
+	function getUnifiedSelectOptionDisabledAttribute(option) {
+		// Try to define the disabled from the disabled attribute
+		var disabled = option.attr('disabled');
+
+		// Check if the disabled state has been set as DOM property
+		if(typeof disabled === 'undefined') {
+			disabled = option.prop('disabled');
+		} else {
+			disabled = true;
+		}
+
+		return disabled;
 	}
 
-	var element;
+	// Bind the event needed to change the select
+	function setUnifiedSelectDropdownItemEvents(unified_select) {
+		var unified_select_dropdown_item = unified_select.find('.select-dropdown-item');
+		var select = unified_select.find('select');
 
-	switch(type) {
-		case 'root':
-			element = origin.parents('.' + data.elements.root).first();
-		break;
-		case 'select-value':
-			element = origin.find('.' + data.elements.value).first();
-		break;
-		case 'select':
-			element = origin.find(data.elements.select).first();
-		break;
-		case 'option':
-			element = origin.find(data.elements.option);
-		break;
-		case 'form':
-			element = origin.parents(data.elements.form).first();
-		break;
-		default:
-			element = null;
+		unified_select_dropdown_item.on({
+			click : function(event) {
+				event.preventDefault();
+				
+				var item = $(this);
+				var index = item.index();
+
+				console.log(index);
+
+				// Fire the callback and update our select
+				$(document).trigger('tipi.unified-select.change', [unified_select, index]);
+			}
+		});
 	}
 
-	return element;
-}
+	// Set the new selected index defined from our selected item
+	function setUnifiedSelectSelectedIndex(unified_select, index) {
+		var select = unified_select.find('select');
+
+		// Don't init any callbacks when our index is the same value as the selectedIndex
+		if (select.get(0).selectedIndex === index) {
+			return;
+		}
+
+		var option = select.find('option').eq(index);
+		var disabled = getUnifiedSelectOptionDisabledAttribute(option)
+		if(disabled) {
+			return;
+		}
+
+		select.get(0).selectedIndex = index;
+		
+		select.trigger('change');
+	}
+
+	function setUnifiedSelectDropdownEvents(unified_select) {
+		var unified_select_value = unified_select.find('.select-value');
+
+		unified_select_value.on({
+			click : function(event) {
+				event.preventDefault();
+
+				var dropdown_is_open = unified_select.hasClass('js__select--dropdown-open');;
+				if (dropdown_is_open) {
+					$(document).trigger('tipi.unified-select.open', [unified_select]);
+				}
+				else {
+					$(document).trigger('tipi.unified-select.close', [unified_select]);
+				}
+			}
+		})
+	}
+
+	function openUnifiedSelectDropdown(unified_select) {
+		var disabled = getUnifiedSelectDisabledState(unified_select);
+		if(disabled) {
+			return;
+		}
+
+		unified_select.addClass('js__select--dropdown-open')
+	}
+
+	function closeUnifiedSelectDropdown(unified_select) {
+		unified_select.removeClass('js__select--dropdown-open')
+	}
+
+	// disabled	disabled	Specifies that an option should be disabled
+	// label	text	Specifies a shorter label for an option
+	// selected	selected	Specifies that an option should be pre- selected when the page loads
+	// value
+
+})(window.jQuery(window), window.jQuery(document), window.jQuery);
