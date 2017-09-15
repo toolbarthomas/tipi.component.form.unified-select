@@ -15,6 +15,12 @@
 
 			setUnifiedSelectDropdownEvents(unified_select);
 		},
+		'tipi.unified-select.focus': function (event, unified_select) {
+			focusUnifiedSelect(unified_select);
+		},
+		'tipi.unified-select.blur': function (event, unified_select) {
+			blurUnifiedSelect(unified_select);
+		},
 		'tipi.unified-select.open': function (event, unified_select) {
 			openUnifiedSelectDropdown(unified_select);
 		},
@@ -87,10 +93,10 @@
 		var select = unified_select.find('select');
 		select.on({
 			focus: function () {
-				unified_select.addClass('js__select--focus');
+				$(document).trigger('tipi.unified-select.focus', [unified_select]);
 			},
 			blur: function () {
-				unified_select.removeClass('js__select--focus');
+				$(document).trigger('tipi.unified-select.blur', [unified_select]);
 			},
 			keyup: function () {
 				select.blur().focus();
@@ -140,10 +146,10 @@
 
 		unified_select.on({
 			focus: function () {
-				unified_select.addClass('js__select--focus');
+				$(document).trigger('tipi.unified-select.focus', [unified_select]);
 			},
 			blur: function () {
-				unified_select.removeClass('js__select--focus');
+				$(document).trigger('tipi.unified-select.blur', [unified_select]);				
 			}
 		});
 
@@ -375,6 +381,7 @@
 
 				// Fire the callback and update our select
 				$(document).trigger('tipi.unified-select.change', [unified_select, index]);
+				$(document).trigger('tipi.unified-select.close', [unified_select]);
 			}
 		});
 	}
@@ -422,22 +429,56 @@
 		})
 	}
 
+	
+	function focusUnifiedSelect(unified_select) {
+		var disabled = getUnifiedSelectDisabledState(unified_select);
+		if (disabled) {
+			return;
+		}
+
+		unified_select.addClass('js__select--focus');
+	}
+	
+	function blurUnifiedSelect(unified_select) {
+		unified_select.removeClass('js__select--focus');
+	}
+
 	function openUnifiedSelectDropdown(unified_select) {
 		var disabled = getUnifiedSelectDisabledState(unified_select);
 		if(disabled) {
 			return;
 		}
 
-		unified_select.addClass('js__select--active')
+		unified_select.addClass('js__select--active');
+
+		// Bind body
+		setTimeout(function() {
+			$('body').one('click', function (event) {
+				if (isTarget($(event.target), '.select')) {
+					return;
+				}
+
+				$(document).trigger('tipi.unified-select.close', [unified_select])
+			});
+		}, 1)
 	}
 
 	function closeUnifiedSelectDropdown(unified_select) {
 		unified_select.removeClass('js__select--active')
 	}
 
-	// disabled	disabled	Specifies that an option should be disabled
-	// label	text	Specifies a shorter label for an option
-	// selected	selected	Specifies that an option should be pre- selected when the page loads
-	// value
+	function isTarget(target, filter) {
+		var is_target = false;
+
+		if (target.hasClass((filter.replace('.','')))) {
+			is_target = true;
+		}
+
+		if (target.parents(filter).length > 0) {
+			is_target = true;
+		}
+
+		return is_target;
+	}
 
 })(window.jQuery(window), window.jQuery(document), window.jQuery);

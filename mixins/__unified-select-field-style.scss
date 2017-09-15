@@ -35,7 +35,7 @@
 				@include transition($transition);
 			}
 
-			@at-root .js__select--focus#{$this} {
+			@at-root .js__select--focus:not(.js__select--disabled)#{$this} {
 				@if $background-color--focus != false {
 					background-color: $background-color--focus;
 				}
@@ -45,7 +45,7 @@
 				}
 			}			
 
-			@at-root .js__select--active#{$this} {
+			@at-root .js__select--active:not(.js__select--disabled)#{$this} {
 				@if $background-color--active != false {
 					background-color: $background-color--active;
 				}
@@ -58,7 +58,7 @@
 	}
 
 	.select-field-glyph {
-		#{$selector}.js__select--ready & {
+		#{$selector}.js__select--ready:not(.js__select--disabled) & {
 			$this: &;
 
 			@if $glyph-fill != false {
@@ -98,7 +98,7 @@
 	}
 
 	.select-field-glyph {
-		#{$selector}.js__select--ready & {
+		#{$selector}.js__select--ready:not(.js__select--disabled) & {
 			$this: &;
 
 			@if $glyph-rotation != false {

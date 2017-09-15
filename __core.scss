@@ -12,6 +12,10 @@
 		.js__select--ready & {
 			cursor: pointer;
 		}
+
+		.js__select--disabled & {
+			cursor: not-allowed;
+		}
 	}
 
 	.select-field-value {
