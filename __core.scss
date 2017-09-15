@@ -1,45 +1,105 @@
 @mixin core_unified-select {
 	.select {
 		display: block;
+		position: relative;
+		text-align: left;
+	}
 
-		select {
-			margin: 0;
+	.select-field {
+		position: relative;		
+		overflow: hidden;
+	}
+
+	.select-field-value {
+		display: none;
+		user-select: none;
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 50%;
+		@include transform(
+			translateY(-50%)
+		);
+
+		.js__select--ready & {
+			display: block;
+		}
+	}
+
+	.select-field-glyph-wrapper {
+		display: none;
+		position: absolute;
+		top: 50%;
+		text-align: center;
+		user-select: none;
+		@include transform(
+			translateY(-50%)
+		);
+
+		.js__select--ready & {
+			display: block;
 		}
 
-		&.__select--ready {
-			position: relative;
-			height: $unified-select-height;
-			margin-bottom: $unified-select-margin-bottom;
-			cursor: pointer;
-
-			@if $unified-select-transitions != false {
-				@include transition(
-					(background $unified-select-transition-speed $unified-select-transition-timing 0s),
-					(color $unified-select-transition-speed $unified-select-transition-timing 0s),
-					(border $unified-select-transition-speed $unified-select-transition-timing 0s),
-					(box-shadow $unified-select-transition-speed $unified-select-transition-timing 0s)
-				);
+		@if $unified-select-field-glyph-position == left {
+			left: 0;
+			
+			.select--reverse & {
+				left: auto;
+				right: 0;
 			}
+		} @else {
+			right: 0;
 
-
-			@include user-select(none);
-
-			&:only-child,
-			&:last-child {
-				margin-bottom: 0;
-			}
-
-			select {
-				display: block;
-				position: absolute;
-				top: 50%;
+			.select--reverse & {
+				right: auto;
 				left: 0;
-				width: 100%;
-				height: $unified-select-height;
-				@include appearance(none);
-				border: 0;
-				outline: none;
-				opacity: 0;
+			}
+		}
+	}
+
+	.select-field-glyph {
+		display: inline-block;
+	}
+
+	// display: block;
+	// 			position: absolute;
+	// 			top: 50%;
+	// 			left: 0;
+	// 			width: 100%;
+	// 			height: $unified-select-height;
+	// 			@include appearance(none);
+	// 			border: 0;
+	// 			outline: none;
+	// 			opacity: 0;
+	// 			@include transform(
+	// 				translateY(-50%)
+	// 			);
+
+	// 			option {
+	// 				opacity: 1;
+	// 			}
+
+	select {
+		.js__select--ready & {
+			$this: &;
+			display: block;
+			position: absolute;
+			pointer-events: none;
+			right: 100%;
+			width: 100%;
+			top: 0;
+			@include appearance(none);
+			opacity: 0;
+			visibility: hidden;
+			border: 0;
+			outline: none;
+
+			@at-root .select--native#{$this} {
+				pointer-events: auto;
+				top: 50%;
+				right: auto;
+				left: 0;
+				visibility: visible;
 				@include transform(
 					translateY(-50%)
 				);
@@ -49,65 +109,153 @@
 				}
 			}
 		}
-
-		&.__select--disabled {
-			* {
-				cursor: default;
-				cursor: not-allowed;
-			}
-		}
 	}
 
-	.select-value {
-		display: none;
+	.select-dropdown {
 		position: absolute;
-		left: 0;
-		right: 0;
-		top: 50%;
-		padding: 0.5em $unified-select-gutter;
-		padding-right: $unified-select-height;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-		overflow: hidden;
-		pointer-events: none;
-		@include transform(
-			translateY(-50%)
-		);
+		top: 100%;
+		min-width: 100%;
 
-		.__select--ready & {
+		.js__select--active & {
 			display: block;
 		}
-	}
 
-	.select-control {
-		display: none;
-		position: absolute;
-		top: 50%;
-		right: $unified-select-height / 2;
-		pointer-events: none;
+		&,
+		.select--native & {
+			display: none;
+		}
 
-		@include transform(
-			translate(50%, -50%)
-		);
 
-		.__select--ready & {
-			display: block;
+		.js__select--dropdown-reverse & {
+			top: auto;
+			bottom: 100%;
 		}
 	}
 
-	#{$unified-select-glyph-selector} {
-		display: inline-block;
-		margin: 0;
-		padding: 0;
-		vertical-align: middle;
-		width: $unified-select-glyph-width;
-		height: $unified-select-glyph-height;
+	.select-dropdown-item {
+		display: block;
 
-		@if $unified-select-transitions != false {
-			@include transition(
-				(fill $unified-select-transition-speed $unified-select-transition-timing 0s),
-				(color $unified-select-transition-speed $unified-select-transition-timing 0s)
-			);
+		&.js__select-dropdown-item--hide {
+			display: none;
 		}
 	}
+
+
+	// .select {
+	// 	display: block;
+
+	// 	select {
+	// 		margin: 0;
+	// 	}
+
+	// 	&.js__select--ready {
+	// 		position: relative;
+	// 		height: $unified-select-height;
+	// 		margin-bottom: $unified-select-margin-bottom;
+	// 		cursor: pointer;
+
+	// 		@if $unified-select-transitions != false {
+	// 			@include transition(
+	// 				(background $unified-select-transition-speed $unified-select-transition-timing 0s),
+	// 				(color $unified-select-transition-speed $unified-select-transition-timing 0s),
+	// 				(border $unified-select-transition-speed $unified-select-transition-timing 0s),
+	// 				(box-shadow $unified-select-transition-speed $unified-select-transition-timing 0s)
+	// 			);
+	// 		}
+
+
+	// 		@include user-select(none);
+
+	// 		&:only-child,
+	// 		&:last-child {
+	// 			margin-bottom: 0;
+	// 		}
+
+	// 		select {
+	// 			display: block;
+	// 			position: absolute;
+	// 			top: 50%;
+	// 			left: 0;
+	// 			width: 100%;
+	// 			height: $unified-select-height;
+	// 			@include appearance(none);
+	// 			border: 0;
+	// 			outline: none;
+	// 			opacity: 0;
+	// 			@include transform(
+	// 				translateY(-50%)
+	// 			);
+
+	// 			option {
+	// 				opacity: 1;
+	// 			}
+	// 		}
+	// 	}
+
+	// 	&.js__select--disabled {
+	// 		* {
+	// 			cursor: default;
+	// 			cursor: not-allowed;
+	// 		}
+	// 	}
+	// }
+
+	// .select-value {
+	// 	display: none;
+	// 	position: absolute;
+	// 	left: 0;
+	// 	right: 0;
+	// 	top: 50%;
+	// 	padding: 0.5em $unified-select-gutter;
+	// 	padding-right: $unified-select-height;
+	// 	white-space: nowrap;
+	// 	text-overflow: ellipsis;
+	// 	overflow: hidden;
+	// 	pointer-events: none;
+	// 	@include transform(
+	// 		translateY(-50%)
+	// 	);
+
+	// 	.js__select--ready & {
+	// 		display: block;
+	// 	}
+	// }
+
+	// .select-control {
+	// 	display: none;
+	// 	position: absolute;
+	// 	top: 50%;
+	// 	right: $unified-select-height / 2;
+	// 	pointer-events: none;
+
+	// 	@include transform(
+	// 		translate(50%, -50%)
+	// 	);
+
+	// 	.js__select--ready & {
+	// 		display: block;
+	// 	}
+	// }
+
+	// .select-dropdown {
+	// 	position: absolute;
+	// 	left: 0;
+	// 	min-width: 100%;
+	// }
+
+	// #{$unified-select-glyph-selector} {
+	// 	display: inline-block;
+	// 	margin: 0;
+	// 	padding: 0;
+	// 	vertical-align: middle;
+	// 	width: $unified-select-glyph-width;
+	// 	height: $unified-select-glyph-height;
+
+	// 	@if $unified-select-transitions != false {
+	// 		@include transition(
+	// 			(fill $unified-select-transition-speed $unified-select-transition-timing 0s),
+	// 			(color $unified-select-transition-speed $unified-select-transition-timing 0s)
+	// 		);
+	// 	}
+	// }
 }

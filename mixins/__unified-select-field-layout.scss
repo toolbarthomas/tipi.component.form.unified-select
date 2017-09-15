@@ -1,0 +1,64 @@
+@mixin unified-select-field-layout(
+    $selector: null,
+    $height: false,
+    $gutter: false,
+    $glyph-wrapper-width: false
+) {
+    // Use the prefix so we can have to correct CSS selector if our $selector option is not defined
+	$prefix: '';
+	@if not $selector {
+		$prefix: ' '; 
+    }
+    
+    .select-field {        
+        #{$selector}.js__select--ready & {
+            @if $height != false {
+                height: $height;
+            }
+        }
+    }
+
+    select {
+        #{$selector}.js__select--ready.select--native & {
+            height: $height;
+        }
+    }
+
+    .select-field-value {
+        #{$selector}.js__select--ready & {
+            $this: $prefix + &;
+
+            @if $gutter != false {
+                padding-left: $gutter;
+                padding-right: $gutter;
+            }
+
+            @if $glyph-wrapper-width != false {
+                @if $unified-select-field-glyph-position == left {
+                    left: $glyph-wrapper-width;
+
+                    @at-root .select--reverse#{$this} {
+                        left: 0;
+                        right: $glyph-wrapper-width;
+                    }
+                }
+                @else {
+                    right: $glyph-wrapper-width;
+
+                    @at-root .select--reverse#{$this} {
+                        left: $glyph-wrapper-width;
+                        right: 0;
+                    }
+                }
+            }
+        }
+    }
+
+    .select-field-glyph {
+        #{$selector}.js__select--ready & {
+            @if $glyph-wrapper-width != false {
+                width: $glyph-wrapper-width;
+            }
+        }
+    }
+}

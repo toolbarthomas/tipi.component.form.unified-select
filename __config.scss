@@ -1,29 +1,31 @@
-$unified-select-glyph-selector:								'.select-glyph' !default;
+$unified-select-field-glyph-position: right !default;
 
-$unified-select-gutter: 									12px !default;
-$unified-select-margin-bottom: 								15px !default;
-$unified-select-height: 									32px !default;
+// $unified-select-glyph-selector:								'.select-glyph' !default;
 
-$unified-select-glyph-width: 								8px !default;
-$unified-select-glyph-height: 								8px !default;
-$unified-select-glyph-border-radius: 						50% !default;
+// $unified-select-gutter: 									12px !default;
+// $unified-select-margin-bottom: 								15px !default;
+// $unified-select-height: 									32px !default;
 
-$unified-select-transitions: 								true !default;
-$unified-select-transition-speed:							200ms !default;
-$unified-select-transition-timing:							ease-in-out !default;
+// $unified-select-glyph-width: 								8px !default;
+// $unified-select-glyph-height: 								8px !default;
+// $unified-select-glyph-border-radius: 						50% !default;
 
-$unified-select-border-selectors:							('.select.__select--ready') !default;
-$unified-select-background-selectors:						('.select.__select--ready') !default;
-$unified-select-font-selectors:								('.select.__select--ready .select-value') !default;
+// $unified-select-transitions: 								true !default;
+// $unified-select-transition-speed:							200ms !default;
+// $unified-select-transition-timing:							ease-in-out !default;
 
-@if variable-exists(form-validation-border-selectors) {
-	$form-validation-border-selectors: append($form-validation-border-selectors, $unified-select-border-selectors, 'comma');
-}
+// $unified-select-border-selectors:							('.select.__select--ready') !default;
+// $unified-select-background-selectors:						('.select.__select--ready') !default;
+// $unified-select-font-selectors:								('.select.__select--ready .select-value') !default;
 
-@if variable-exists(form-validation-background-selectors) {
-	$form-validation-background-selectors: append($form-validation-background-selectors, $unified-select-background-selectors, 'comma');
-}
+// @if variable-exists(form-validation-border-selectors) {
+// 	$form-validation-border-selectors: append($form-validation-border-selectors, $unified-select-border-selectors, 'comma');
+// }
 
-@if variable-exists(form-validation-font-selectors) {
-	$form-validation-font-selectors: append($form-validation-font-selectors, $unified-select-font-selectors, 'comma');
-}
+// @if variable-exists(form-validation-background-selectors) {
+// 	$form-validation-background-selectors: append($form-validation-background-selectors, $unified-select-background-selectors, 'comma');
+// }
+
+// @if variable-exists(form-validation-font-selectors) {
+// 	$form-validation-font-selectors: append($form-validation-font-selectors, $unified-select-font-selectors, 'comma');
+// }

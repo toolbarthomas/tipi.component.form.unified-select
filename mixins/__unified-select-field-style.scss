@@ -1,0 +1,113 @@
+@mixin unified-select-field-style(
+	$selector: null,
+	$background-color: false,
+	$background-color--focus: false,
+	$background-color--active: false,
+	$border: false,
+	$border-color--focus: false,
+	$border-color--active: false,
+	$transition: false,
+	$glyph-fill: false,
+	$glyph-fill--focus: false,
+	$glyph-fill--active: false,
+	$glyph-color: false,
+	$glyph-color--focus: false,
+	$glyph-color--active: false,
+	$glyph-transition: false,
+	$glyph-rotation: false
+) {
+	// Use the prefix so we can have to correct CSS selector if our $selector option is not defined
+	$prefix: '';
+	
+	.select-field {
+		#{$selector}.js__select--ready & {
+			$this: &;
+			
+			@if $background-color != false {
+				background-color: $background-color;
+			}
+
+			@if $border != false {
+				border: $border;
+			}
+
+			@if $transition != false {
+				@include transition($transition);
+			}
+
+			@at-root .js__select--focus#{$this} {
+				@if $background-color--focus != false {
+					background-color: $background-color--focus;
+				}
+
+				@if $border-color--focus != false {
+					border-color: $border-color--focus;
+				}
+			}			
+
+			@at-root .js__select--active#{$this} {
+				@if $background-color--active != false {
+					background-color: $background-color--active;
+				}
+
+				@if $border-color--active != false {
+					border-color: $border-color--active;
+				}
+			}
+		}
+	}
+
+	.select-field-glyph {
+		#{$selector}.js__select--ready & {
+			$this: &;
+
+			@if $glyph-fill != false {
+				fill: $glyph-fill;
+			}
+	
+			@if $glyph-color != false {
+				color: $glyph-color;
+			}
+
+			@at-root .js__select--focus#{$this} {
+				@if $glyph-fill--focus != false {
+					fill: $glyph-fill--focus;
+				}
+		
+				@if $glyph-color--focus != false {
+					color: $glyph-color--focus;
+				}
+			}
+			
+			@at-root .js__select--active#{$this} {
+				@if $glyph-fill--active != false {
+					fill: $glyph-fill--active;
+				}
+		
+				@if $glyph-color--active != false {
+					color: $glyph-color--active;
+				}
+			}
+	
+			@if $glyph-transition != false {
+				@if $glyph-transition != false {
+					@include transition($glyph-transition);
+				}
+			}
+		}
+	}
+
+	.select-field-glyph-wrapper {
+		#{$selector}.js__select--ready & {
+			$this: &;
+
+			@if $glyph-rotation != false {
+				@at-root .js__select--active#{this} {
+					@include transform(
+						rotate(180deg)
+					);
+				}
+			}
+		}	
+	}
+}
