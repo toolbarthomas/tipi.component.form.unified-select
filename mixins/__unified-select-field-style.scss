@@ -6,15 +6,15 @@
 	$border: false,
 	$border-color--focus: false,
 	$border-color--active: false,
-	$transition: false,
 	$glyph-fill: false,
 	$glyph-fill--focus: false,
 	$glyph-fill--active: false,
 	$glyph-color: false,
 	$glyph-color--focus: false,
 	$glyph-color--active: false,
+	$glyph-rotation: false,
 	$glyph-transition: false,
-	$glyph-rotation: false
+	$transition: false
 ) {
 	// Use the prefix so we can have to correct CSS selector if our $selector option is not defined
 	$prefix: '';
@@ -97,12 +97,12 @@
 		}
 	}
 
-	.select-field-glyph-wrapper {
+	.select-field-glyph {
 		#{$selector}.js__select--ready & {
 			$this: &;
 
 			@if $glyph-rotation != false {
-				@at-root .js__select--active#{this} {
+				@at-root .js__select--active#{$this} {
 					@include transform(
 						rotate(180deg)
 					);

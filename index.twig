@@ -6,9 +6,9 @@
 			<div class="select-field">
 				<select name="" id="">
 					<option disabled>Disabled state for everyone</option>
-					<option>Red 2</option>
-					<option>White</option>
-					<option>Blue</option>
+					{% for i in 0..200 %}
+					<option>Item {{ loop.index }}</option>
+					{% endfor %}
 				</select>
 				<div class="select-field-value"></div>
 				<div class="select-field-glyph-wrapper">

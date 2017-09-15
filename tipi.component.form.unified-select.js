@@ -251,12 +251,19 @@
 
 		unified_select_filter_input.on({
 			'keyup keydown':function(event) {
+				var filter = $(this);
+
 				if (event.keyCode == 13) {
 					event.preventDefault();
 					return false;
 				}
 
-				var filter = $(this);
+				if(event.keyCode === 38 || event.keyCode === 40) {
+					filter.blur();
+					focusUnifiedSelectItem(unified_select, event.keyCode);
+					return;
+				}
+
 
 				clearTimeout(timeout);
 				timeout = setTimeout(function () {
@@ -315,6 +322,10 @@
 		}
 
 		unified_select_dropdown_item.addClass('js__select-dropdown-item--hide');
+	}
+
+	function focusUnifiedSelectItem(unified_select, key) {
+		//@todo focus items with keyboard
 	}
 
 	// Define the label for our dropdown item

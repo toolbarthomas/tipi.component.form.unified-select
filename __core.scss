@@ -8,6 +8,10 @@
 	.select-field {
 		position: relative;		
 		overflow: hidden;
+
+		.js__select--ready & {
+			cursor: pointer;
+		}
 	}
 
 	.select-field-value {
@@ -134,6 +138,10 @@
 
 	.select-dropdown-item {
 		display: block;
+
+		.js__select--ready & {
+			cursor: pointer;
+		}
 
 		&.js__select-dropdown-item--hide {
 			display: none;
