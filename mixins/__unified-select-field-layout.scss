@@ -54,7 +54,7 @@
         }
     }
 
-    .select-field-glyph {
+    .select-field-glyph-wrapper {
         #{$selector}.js__select--ready & {
             @if $glyph-wrapper-width != false {
                 width: $glyph-wrapper-width;
