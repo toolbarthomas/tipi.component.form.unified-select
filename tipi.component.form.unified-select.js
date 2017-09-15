@@ -248,7 +248,6 @@
 
 		var select = unified_select.find('select');
 		var attributes = {
-			name: select.attr('name'),
 			placeholder: unified_select.data('select-filter-placeholder')
 		};
 
