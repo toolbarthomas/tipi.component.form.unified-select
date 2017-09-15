@@ -253,9 +253,7 @@
 		};
 
 		// Append each attribute to the filter input
-		for (var key in attributes) {
-			console.log(attributes[key]);
-			
+		for (var key in attributes) {			
 			if (typeof attributes[key] === 'undefined' || attributes[key] === '') {
 				continue;
 			}
