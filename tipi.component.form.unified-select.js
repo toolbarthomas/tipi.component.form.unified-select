@@ -91,7 +91,7 @@
 
 	function setUnifiedSelectEvents(unified_select) {
 		var select = unified_select.find('select');
-		select.on({
+		select.off('focus blur keyup change').on({
 			focus: function () {
 				$(document).trigger('tipi.unified-select.focus', [unified_select]);
 			},
@@ -144,7 +144,7 @@
 		// Enable support for tabbing the selectbox
 		unified_select.attr('tabindex', '0');
 
-		unified_select.on({
+		unified_select.off('focus blur').on({
 			focus: function () {
 				$(document).trigger('tipi.unified-select.focus', [unified_select]);
 			},
@@ -419,7 +419,7 @@
 
 		var unified_select_field = unified_select.find('.select-field');
 
-		unified_select_field.on({
+		unified_select_field.off('click').on({
 			click : function(event) {
 				event.preventDefault();
 
