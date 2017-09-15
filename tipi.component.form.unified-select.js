@@ -247,14 +247,23 @@
 		var unified_select_filter_input = unified_select_dropdown.find('.select-filter-input');
 
 		var select = unified_select.find('select');
-		var name = select.attr('name');
+		var attributes = {
+			name: select.attr('name'),
+			placeholder: unified_select.data('select-filter-placeholder')
+		};
 
-		if(typeof name != 'undefined' && name != '') {
-			unified_select_filter_input.attr('name', name + '-filter');
+		// Append each attribute to the filter input
+		for (var key in attributes) {
+			console.log(attributes[key]);
+			
+			if (typeof attributes[key] === 'undefined' || attributes[key] === '') {
+				continue;
+			}
+
+			unified_select_filter_input.attr(key, attributes[key]);
 		}
 
 		var timeout;
-
 		unified_select_filter_input.on({
 			'keyup keydown':function(event) {
 				var filter = $(this);
@@ -311,8 +320,6 @@
 				return;
 			}
 		});
-
-		console.log(found_indexes);
 
 		var unified_select_dropdown_item = unified_select.find('.select-dropdown-item');
 		//Hide all 
