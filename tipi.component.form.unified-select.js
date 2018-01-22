@@ -23,9 +23,11 @@
 		},
 		'tipi.unified-select.open': function (event, unified_select, unified_selects) {
 			openUnifiedSelectDropdown(unified_select, unified_selects);
+			focusFilterUnifiedSelect(unified_select);
 		},
 		'tipi.unified-select.close': function (event, unified_select) {
 			closeUnifiedSelectDropdown(unified_select);
+			blurFilterUnifiedSelect(unified_select);
 		},
 		// All function needed when we changed the value of the select
 		'tipi.unified-select.change': function (event, unified_select, index) {
@@ -55,7 +57,7 @@
 			$(window).trigger('tipi.unified-select.init', [unified_select, unified_selects]);
 		});
 	}
-	
+
 	// Add the ready state and show it to the world
 	function setUnifiedSelectReadyState(unified_select) {
 		unified_select.addClass('js__select--ready');
@@ -149,7 +151,7 @@
 				$(document).trigger('tipi.unified-select.focus', [unified_select]);
 			},
 			blur: function () {
-				$(document).trigger('tipi.unified-select.blur', [unified_select]);				
+				$(document).trigger('tipi.unified-select.blur', [unified_select]);
 			}
 		});
 
@@ -285,9 +287,29 @@
 			},
 			'keyup': function (event) {
 				event.preventDefault();
-				
+
 			}
 		});
+	}
+
+	function focusFilterUnifiedSelect(unified_select) {
+		var filter = unified_select.find('.select-filter-input');
+
+		if (filter.length === 0) {
+			return;
+		}
+
+		filter.focus();
+	}
+
+	function blurFilterUnifiedSelect(unified_select) {
+		var filter = unified_select.find('.select-filter-input');
+
+		if (filter.length === 0) {
+			return;
+		}
+
+		filter.blur();
 	}
 
 	// Filter the input
