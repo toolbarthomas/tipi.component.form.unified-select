@@ -2,7 +2,7 @@
 
 	$(window).on({
 		// All function needed on the first init
-		'tipi.unified-select.init' : function(event, unified_select) {
+		'tipi.unified-select.init': function (event, unified_select, unified_selects) {
 			setUnifiedSelectReadyState(unified_select)
 			setUnifiedSelectDisabledState(unified_select);
 			setUnifiedSelectEvents(unified_select);
@@ -13,7 +13,7 @@
 			setUnifiedSelectFilter(unified_select);
 			setUnifiedSelectDropdownItemEvents(unified_select);
 
-			setUnifiedSelectDropdownEvents(unified_select);
+			setUnifiedSelectDropdownEvents(unified_select, unified_selects);
 		},
 		'tipi.unified-select.focus': function (event, unified_select) {
 			focusUnifiedSelect(unified_select);
@@ -21,8 +21,8 @@
 		'tipi.unified-select.blur': function (event, unified_select) {
 			blurUnifiedSelect(unified_select);
 		},
-		'tipi.unified-select.open': function (event, unified_select) {
-			openUnifiedSelectDropdown(unified_select);
+		'tipi.unified-select.open': function (event, unified_select, unified_selects) {
+			openUnifiedSelectDropdown(unified_select, unified_selects);
 		},
 		'tipi.unified-select.close': function (event, unified_select) {
 			closeUnifiedSelectDropdown(unified_select);
@@ -36,7 +36,7 @@
 			setUnifiedSelectValue(unified_select);
 		}
 	});
-	
+
 	window.setUnifiedSelect = function() {
 		var unified_selects = $('.select').not('js__select--ready');
 
@@ -52,13 +52,13 @@
 				return;
 			}
 
-			$(window).trigger('tipi.unified-select.init', [unified_select]);
+			$(window).trigger('tipi.unified-select.init', [unified_select, unified_selects]);
 		});
 	}
 	
 	// Add the ready state and show it to the world
 	function setUnifiedSelectReadyState(unified_select) {
-		unified_select.addClass('js__select--ready');		
+		unified_select.addClass('js__select--ready');
 	}
 
 	// Add the disabled state if our select is disabled
@@ -121,7 +121,7 @@
 		}
 
 		var label = getUnifiedSelectOptionLabelAttribute(option);
-		
+
 		// Set the actual selected value!
 		unified_select_field_value.html(label);
 	}
@@ -156,9 +156,9 @@
 		var select = unified_select.find('select');
 		// Disable support for tabbing in the actual select element
 		select.attr('tabindex', '-1');
-		
+
 	}
-	
+
 	// Remove the dropdown and items for our select
 	function unsetUnifiedSelectDropdown(unified_select) {
 		var unified_select_dropdown = unified_select.find('.select-dropdown');
@@ -209,7 +209,7 @@
 		// Loop through each select option and set it's attribute
 		options.each(function(index) {
 			var option = $(this);
-			
+
 			var label = getUnifiedSelectOptionLabelAttribute(option);
 			var disabled = getUnifiedSelectOptionDisabledAttribute(option);
 			if(disabled) {
@@ -220,7 +220,7 @@
 
 			json_data.push(label);
 
-			unified_select_dropdown_items.append('<div class="select-dropdown-item' + disabled + '">' + label + '</div>');			
+			unified_select_dropdown_items.append('<div class="select-dropdown-item' + disabled + '">' + label + '</div>');
 		});
 
 		unified_select.data('json_data', json_data);
@@ -252,7 +252,7 @@
 		};
 
 		// Append each attribute to the filter input
-		for (var key in attributes) {			
+		for (var key in attributes) {
 			if (typeof attributes[key] === 'undefined' || attributes[key] === '') {
 				continue;
 			}
@@ -319,7 +319,7 @@
 		});
 
 		var unified_select_dropdown_item = unified_select.find('.select-dropdown-item');
-		//Hide all 
+		//Hide all
 		unified_select_dropdown_item.removeClass('js__select-dropdown-item--hide');
 
 		if(found_indexes.length === 0){
@@ -342,7 +342,7 @@
 	function getUnifiedSelectOptionLabelAttribute(option) {
 		// Try to define the label from the label attribute
 		var label = option.attr('label');
-		
+
 		// Fallback to the actual option text
 		if (typeof label === 'undefined') {
 			label = option.text();
@@ -379,7 +379,7 @@
 		unified_select_dropdown_item.on({
 			click : function(event) {
 				event.preventDefault();
-				
+
 				var item = $(this);
 				var index = item.index();
 
@@ -406,11 +406,11 @@
 		}
 
 		select.get(0).selectedIndex = index;
-		
+
 		select.trigger('change');
 	}
 
-	function setUnifiedSelectDropdownEvents(unified_select) {
+	function setUnifiedSelectDropdownEvents(unified_select, unified_selects) {
 		// Don't append the dropdown if we wan't to use the native select
 		if (unified_select.hasClass('select--native')) {
 			return;
@@ -427,13 +427,13 @@
 					$(document).trigger('tipi.unified-select.close', [unified_select]);
 				}
 				else {
-					$(document).trigger('tipi.unified-select.open', [unified_select]);
+					$(document).trigger('tipi.unified-select.open', [unified_select, unified_selects]);
 				}
 			}
 		})
 	}
 
-	
+
 	function focusUnifiedSelect(unified_select) {
 		var disabled = getUnifiedSelectDisabledState(unified_select);
 		if (disabled) {
@@ -442,16 +442,19 @@
 
 		unified_select.addClass('js__select--focus');
 	}
-	
+
 	function blurUnifiedSelect(unified_select) {
 		unified_select.removeClass('js__select--focus');
 	}
 
-	function openUnifiedSelectDropdown(unified_select) {
+	function openUnifiedSelectDropdown(unified_select, unified_selects) {
 		var disabled = getUnifiedSelectDisabledState(unified_select);
 		if(disabled) {
 			return;
 		}
+
+		// Prevent multiple active select dropdown's
+		unified_selects.not(unified_select).removeClass('js__select--active');
 
 		unified_select.addClass('js__select--active');
 
