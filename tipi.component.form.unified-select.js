@@ -125,7 +125,7 @@
 		var label = getUnifiedSelectOptionLabelAttribute(option);
 
 		// Set the actual selected value!
-		unified_select_field_value.html(label);
+		unified_select_field_value.text(label);
 	}
 
 	// Setup our unified select so it uses the native browser controls
