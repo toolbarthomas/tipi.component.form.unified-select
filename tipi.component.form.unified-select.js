@@ -370,7 +370,23 @@
 			label = option.text();
 		}
 
-		return label;
+		// Escape the current label
+		var escaped_label = '';
+		for (var i = 0; i < label.length; i++) {
+			if (label[i] === '<') {
+				escaped_label += '&amp;lt;';
+			} else if (label[i] === '>') {
+				escaped_label += '&amp;gt;';
+			} else if (label[i] === "'") {
+				escaped_label += '&amp;#39;';
+			} else if (label[i] === '"') {
+				escaped_label += '&amp;quot;';
+			} else {
+				escaped_label += label[i];
+			}
+		}
+
+		return escaped_label;
 	}
 
 	// Define the disabled state for our dropdown item
